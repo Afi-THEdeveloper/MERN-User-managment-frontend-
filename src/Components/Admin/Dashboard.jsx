@@ -105,7 +105,7 @@ function Dashboard() {
         <Navbar.Collapse id="navbarSupportedContent">
           <Nav className="me-auto">
             <NavDropdown title="Settings" id="basic-nav-dropdown">
-              <NavDropdown.Item className="text-primary">
+              <NavDropdown.Item className="text-primary" onClick={()=> navigate('/createUser')}>
                 Add user
               </NavDropdown.Item>
               <NavDropdown.Divider />

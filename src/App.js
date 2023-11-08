@@ -7,6 +7,8 @@ import AdminLogin from './Components/Admin/AdminLogin';
 import Dashboard from './Components/Admin/Dashboard';
 import EditUser from './Components/Admin/EditUser';
 import EditProfile from './Components/EditProfile';
+import CreateUser from './Components/Admin/CreateUser';
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>} />
           <Route path='/editUser' element={<EditUser/>} />
           <Route path='/editProfile' element={<EditProfile/>} />
+          <Route path='/createUser' element={<CreateUser/>} />
         </Routes>
       </Router>
     </div>
