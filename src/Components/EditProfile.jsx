@@ -2,45 +2,62 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+
 function EditProfile() {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
-  const [image, setImage] = useState(null);
   const [email, setEmail] = useState(null);
+  const [preview, setPreview] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
   const { user } = location.state;
   axios.defaults.withCredentials = true;
+
   useEffect(() => {
     if (user) {
       setName(user.name);
       setMobile(user.mobile);
-      setImage(user.image);
       setEmail(user.email);
+      setPreview(`http://localhost:5000/profile/${user.profile}`)
     }
   }, []);
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(URL.createObjectURL(file));
-    console.log(image);
-  };
 
-  const updateProfile = () => {
-    console.log(image);
-    const formData = new FormData();
-    formData.append("profileImage", image);
+  const handleForm = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    const selectedImage = document.getElementById("upload");
+    const image = selectedImage.files[0];
+
+    if (image) {
+      data.append("profile", image);
+    }
+    data.append("name", name);
+    data.append("mobile", mobile);
+    data.append("email", email);
+    console.log(data);
 
     axios
-      .post("http://localhost:5000/editProfile", {email, name, mobile, image })
+      .post("http://localhost:5000/editProfile", data)
       .then((res) => {
-        if(res.data.success){
-          navigate('/home', {state:res.data.user})
-        }else{
-          alert(res.data.error)
+        if (res.data.success) {
+          console.log(res.data.user);
+          navigate("/home");
+        } else {
+          console.log("failed");
+          navigate("/editProfile");
         }
       })
       .catch((err) => console.log(err.message));
+  };
+
+  const handlePreview = (e) => {
+    console.log(e.target.files)
+    if(e.target.files.length === 0){
+      return setPreview(null)
+    }
+    const url = URL.createObjectURL(e.target.files[0]);
+    setPreview(url);
   };
 
   return (
@@ -49,7 +66,7 @@ function EditProfile() {
         <div className="card">
           <div className="card-body">
             <h4 className="card-title">Edit profile</h4>
-            <form className="forms-sample" encType="multipart/form-data">
+            <form className="forms-sample" onSubmit={handleForm}>
               <div className="form-group">
                 <label htmlFor="exampleInputName1">Name</label>
                 <input
@@ -78,34 +95,38 @@ function EditProfile() {
               <div className="form-group">
                 <label>Profile Image</label>
                 <div className="input-group col-xs-12">
-                  {/* <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    value={image}
-                    className="form-control file-upload-info"
-                    placeholder="Upload Image"
-                    onChange={handleImageChange}
-                  /> */}
                   <input
                     type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
+                    name="profile"
+                    id="upload"
+                    onChange={handlePreview}
                   />
+                  <br />
                 </div>
               </div>
 
-              <a
-                type="button"
-                onClick={updateProfile}
-                className="btn btn-primary mr-2"
-              >
-                Update
-              </a>
+              {preview && (
+                
+                  <div className="card">
+                    <div className="card-header">Preview Image</div>
+                    <div className="card-body">
+                      <div className="d-flex justify-content-center">
+                        <img
+                          src={preview}
+                          className="preview"
+                          style={{ maxWidth: "500px", objectFit: "cover",maxHeight:'400px' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+              
+              )}
+
+              <input type="submit" placeholder="submit" className="btn btn-primary w-50 mt-3" /><br />
               <a
                 type="button"
                 onClick={() => window.history.back()}
-                className="btn btn-warning mt-2"
+                className="btn bg-warning-subtle mt-2"
               >
                 Cancel
               </a>

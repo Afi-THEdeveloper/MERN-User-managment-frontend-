@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+
 import {
   Navbar,
   Nav,
@@ -27,6 +29,23 @@ function Home() {
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
 
+  useEffect(() => {
+    console.log('hy, iam inside')
+    axios
+      .get("http://localhost:5000/checkLogged")
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          console.log(res.data.user);
+          dispatch(addLoggedUser(res.data.user));
+          navigate("/home");
+        } else {
+          navigate("/login");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const logoutUser = () => {
     axios
       .get("http://localhost:5000/userLogout")
@@ -42,33 +61,18 @@ function Home() {
         console.log(err.message);
       });
   };
-
+  console.log('hy,i am outside')
   const handleEditProfile = () => {
     navigate("/editProfile", { state: { user } });
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/checkLogged")
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          console.log(res.data.user);
-          dispatch(addLoggedUser(res.data.user));
-          navigate("/home");
-        } else {
-          navigate("/login");
-        }
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  
+
   const cardStyle = {
     borderRadius: "15px",
     backgroundColor: "#f9f9f9",
   };
-  const cardStyle1 = {
-    width: "90px",
-  };
+
   return (
     <div>
       <Navbar bg="primary-subtle" expand="lg">
@@ -110,7 +114,7 @@ function Home() {
                       height: "100%",
                       objectFit: "cover",
                     }}
-                    src={user.profile}
+                    src={`http://localhost:5000/profile/${user.profile}`}
                     alt="Profile"
                   />
                 </div>

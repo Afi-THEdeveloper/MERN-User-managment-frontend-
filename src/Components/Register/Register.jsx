@@ -57,7 +57,7 @@ const Register = () => {
       .then((res) => {
         console.log(res.data);
         if (res.data.success) {
-          navigate("/home", { state: res.data.user });
+          navigate("/home");
         } else {
           navigate("/register");
         }
