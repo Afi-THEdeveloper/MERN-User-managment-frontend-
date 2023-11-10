@@ -7,8 +7,26 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error,setError] = useState('')
-  const navigate =useNavigate()  
+  const navigate =useNavigate()
+
   axios.defaults.withCredentials = true
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/checkLogged")
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          navigate("/home");
+        } else {
+          navigate('/login')
+          setError(res.data.error)
+          setTimeout(() => {
+            setError("");
+          }, 2000);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   
   const handleLogin = () => {
     axios
@@ -29,23 +47,7 @@ const Login = () => {
     .catch((err) => console.log(err));
   }; 
 
-    useEffect(() => {
-      axios
-        .get("http://localhost:5000/checkLogged")
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.success) {
-            navigate("/home");
-          } else {
-            navigate('/login')
-            setError(res.data.error)
-            setTimeout(() => {
-              setError("");
-            }, 2000);
-          }
-        })
-        .catch((err) => console.log(err));
-    }, []);
+
   
 
   return (

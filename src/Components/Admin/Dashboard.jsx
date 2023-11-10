@@ -42,9 +42,9 @@ function Dashboard() {
     const user = users.filter((user) => user._id === id);
     console.log(user);
     if (user) {
-      navigate("/editUser", { state: { user } });
+      navigate("/editUser", { state: { userDetails:user } });
     }
-  };
+  };  
 
   const handleSearch = () => {
     dispatch(searchUser(searched));

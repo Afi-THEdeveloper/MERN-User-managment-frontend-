@@ -63,7 +63,7 @@ function Home() {
   };
   console.log('hy,i am outside')
   const handleEditProfile = () => {
-    navigate("/editProfile", { state: { user } });
+    navigate("/editProfile", { state: { userDetails:user } });
   };
 
   
@@ -75,21 +75,15 @@ function Home() {
 
   return (
     <div>
-      <Navbar bg="primary-subtle" expand="lg">
-        <Navbar.Brand onClick={() => navigate("/register")}>
-          Welcome {user && user.name}
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarSupportedContent" />
-        <Navbar.Collapse id="navbarSupportedContent">
-          <Nav className="me-auto">
-            <NavDropdown title="Settings" id="basic-nav-dropdown">
-              <NavDropdown.Item className="text-danger" onClick={logoutUser}>
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      
+      <nav className="navbar navbar-expand-lg bg-primary-subtle">
+        <div className="container-fluid">
+          <a className="navbar-brand text-dark" href="/home">
+            Welcome {user.name}
+          </a>
+          <a type="button" className="btn btn-outline-danger" onClick={logoutUser}>Logout</a>
+        </div>
+      </nav>
 
       <div class="row d-flex justify-content-center align-items-center h-100 mt-5">
         <div class="col col-md-9 col-lg-7 col-xl-5">

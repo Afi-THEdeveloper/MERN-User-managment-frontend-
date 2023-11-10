@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -13,6 +13,21 @@ function CreateUser() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  axios.defaults.withCredentials = true;
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/checkAdminLogged")
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          navigate("/createUser");
+        } else {
+          navigate("/adminlogin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleAddUser = async (e) => {
     e.preventDefault();
@@ -104,7 +119,6 @@ function CreateUser() {
               id="verify"
               checked={!verify}
               onChange={() => setVerify(false)}
-              
             />
             <label class="form-check-label" for="verify">
               Not Verify
